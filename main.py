@@ -19,22 +19,21 @@ for path, subdirs, files in os.walk(mainFolderPath):
     for pathFile in files:
         pathFile = os.path.join(path, pathFile)
         fileName = os.path.basename(pathFile)
-        srcFile = open(pathFile, "r+")
+        srcFile = open(pathFile, "r+", encoding='UTF-8')
 
-        # Add a header
+        # Add a header [filename.php]
         head = document.add_paragraph()
         head = head.add_run(fileName)
         fhead = head.font
         fhead.name = 'Arial'
         fhead.size = Pt(10)
         fhead.bold = True
-        fhead.italic = True
         fhead.underline = True
 
         # Add the codes
         for line in srcFile:
             code = document.add_paragraph()
-            code.paragraph_format.space_before = 0
+            code.paragraph_format.space_after = 0
             code = code.add_run(line)
             fcode = code.font
             fcode.name = 'Arial'
