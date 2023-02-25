@@ -1,9 +1,14 @@
 import os
 import docx
+import time
 from docx import Document
 from docx.shared import Pt
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
+from docx2pdf import convert
+
+# Measures the runtime of the program
+start = time.time()
 
 # Get the filepath of the folder
 mainFolderPath = input("Enter the filepath of the folder: ")
@@ -45,4 +50,10 @@ for path, subdirs, files in os.walk(mainFolderPath):
             fcode.size = Pt(9)
 
 document.save('codes.docx')
-print("codes.docx was successfully created!")
+
+# Saving docx to pdf for faster viewing
+convert("codes.docx", "codes.pdf")
+print("codes.docx and codes.pdf were successfully created!")
+
+end = time.time()
+print(f"Program runtime: {end - start} seconds")
