@@ -1,4 +1,5 @@
 import os
+import docx
 from docx import Document
 from docx.shared import Pt
 from docx.oxml import OxmlElement
@@ -23,15 +24,19 @@ for path, subdirs, files in os.walk(mainFolderPath):
 
         # Add a header [filename.php]
         head = document.add_paragraph()
+        head.paragraph_format.space_before = Pt(15)
+        head.paragraph_format.space_after = Pt(15)
         head = head.add_run(fileName)
         fhead = head.font
         fhead.name = 'Arial'
         fhead.size = Pt(10)
         fhead.bold = True
+        fhead.italic = True
         fhead.underline = True
 
         # Add the codes
         for line in srcFile:
+            line = line.rstrip('\n')
             code = document.add_paragraph()
             code.paragraph_format.space_after = 0
             code = code.add_run(line)
@@ -40,3 +45,4 @@ for path, subdirs, files in os.walk(mainFolderPath):
             fcode.size = Pt(9)
 
 document.save('codes.docx')
+print("codes.docx was successfully created!")
