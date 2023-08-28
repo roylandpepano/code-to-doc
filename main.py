@@ -13,6 +13,9 @@ start = time.time()
 # Get the filepath of the folder
 mainFolderPath = input("Enter the filepath of the folder: ")
 
+# Get the filename
+file_name = os.path.splitext(mainFolderPath)[0]
+
 # Create a document and set the column into 2
 document = Document()
 section = document.sections[0]
@@ -49,11 +52,14 @@ for path, subdirs, files in os.walk(mainFolderPath):
             fcode.name = 'Arial'
             fcode.size = Pt(9)
 
-document.save('codes.docx')
+# Saving to docx file
+file_name_docx = file_name + ".docx"
+document.save(file_name_docx)
 
-# Saving docx to pdf for faster viewing
-convert("codes.docx", "codes.pdf")
-print("codes.docx and codes.pdf were successfully created!")
+# Saving to pdf for faster viewing
+file_name_pdf = file_name + ".pdf"
+convert(file_name_docx, file_name_pdf)
+print(f"{file_name_docx} and {file_name_pdf} were successfully created!")
 
 end = time.time()
 print(f"Program runtime: {end - start} seconds")
