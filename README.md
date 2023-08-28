@@ -46,7 +46,7 @@ This script is designed to convert source code files into a Microsoft Word (.doc
 - The script will generate a .docx file and a .pdf file with the same name as the input folder.
 
 
-## Authors
+## Author
 
 - [@roylandpepano](https://github.com/roylandpepano)
 
