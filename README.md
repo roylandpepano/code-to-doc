@@ -1,4 +1,5 @@
 Code to Document and PDF Converter
+
 This script is designed to convert source code files into a Microsoft Word (.docx) document and a PDF file. It is particularly useful for authors working on a thesis manuscript who want to include code samples within their document. By automating the conversion process, it saves time and effort in manually copying and formatting code snippets.
 
 Features
