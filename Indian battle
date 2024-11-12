@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian Battle Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="gameContainer">
+    <div id="character"></div>
+    <div id="score">Score: 0</div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #87CEEB;
+}
+
+#gameContainer {
+  position: relative;
+  width: 400px;
+  height: 600px;
+  background-color: #b3e5fc;
+  overflow: hidden;
+  border: 2px solid #333;
+}
+
+#character {
+  position: absolute;
+  bottom: 50%;
+  left: 50px;
+  width: 30px;
+  height: 30px;
+  background-color: #ff4081;
+  border-radius: 50%;
+}
+
+.pipe {
+  position: absolute;
+  width: 50px;
+  background-color: #388e3c;
+}
+
+.topPipe {
+  top: 0;
+}
+
+.bottomPipe {
+  bottom: 0;
+}
+
+#score {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+  color: #333;
+  font-weight: bold;
+}
+const gameContainer = document.getElementById("gameContainer");
+const character = document.getElementById("character");
+const scoreDisplay = document.getElementById("score");
+
+let characterY = gameContainer.clientHeight / 2;
+let gravity = 2;
+let jump = -20;
+let velocity = 0;
+let pipes = [];
+let score = 0;
+let gameRunning = true;
+
+// Gravity & Flap
+document.addEventListener("keydown", () => {
+  if (gameRunning) velocity = jump;
+});
+
+// Update Character Position
+function updateCharacter() {
+  velocity += gravity;
+  characterY += velocity;
+  character.style.top = characterY + "px";
+
+  // Check for ground collision
+  if (characterY + character.clientHeight > gameContainer.clientHeight || characterY < 0) {
+    endGame();
+  }
+}
+
+// Generate Pipes
+function generatePipes() {
+  const gapHeight = 150;
+  const pipeWidth = 50;
+  const pipeX = gameContainer.clientWidth;
+  const topPipeHeight = Math.floor(Math.random() * (gameContainer.clientHeight - gapHeight));
+
+  const topPipe = document.createElement("div");
+  topPipe.classList.add("pipe", "topPipe");
+  topPipe.style.height = topPipeHeight + "px";
+  topPipe.style.left = pipeX + "px";
+  
+  const bottomPipe = document.createElement("div");
+  bottomPipe.classList.add("pipe", "bottomPipe");
+  bottomPipe.style.height = gameContainer.clientHeight - topPipeHeight - gapHeight + "px";
+  bottomPipe.style.left = pipeX + "px";
+
+  gameContainer.appendChild(topPipe);
+  gameContainer.appendChild(bottomPipe);
+
+  pipes.push({ topPipe, bottomPipe });
+}
+
+// Move Pipes & Check for Collisions
+function updatePipes() {
+  pipes.forEach((pipePair, index) => {
+    const pipeX = parseInt(pipePair.topPipe.style.left) - 2;
+    pipePair.topPipe.style.left = pipeX + "px";
+    pipePair.bottomPipe.style.left = pipeX + "px";
+
+    // Check for score
+    if (pipeX + pipePair.topPipe.clientWidth < character.offsetLeft && !pipePair.passed) {
+      score++;
+      scoreDisplay.innerText = "Score: " + score;
+      pipePair.passed = true;
+    }
+
+    // Check for collision
+    const charRect = character.getBoundingClientRect();
+    const topPipeRect = pipePair.topPipe.getBoundingClientRect();
+    const bottomPipeRect = pipePair.bottomPipe.getBoundingClientRect();
+
+    if (
+      (charRect.right > topPipeRect.left && charRect.left < topPipeRect.right && charRect.top < topPipeRect.bottom) ||
+      (charRect.right > bottomPipeRect.left && charRect.left < bottomPipeRect.right && charRect.bottom > bottomPipeRect.top)
+    ) {
+      endGame();
+    }
+
+    // Remove pipes that have moved off screen
+    if (pipeX + pipePair.topPipe.clientWidth < 0) {
+      gameContainer.removeChild(pipePair.topPipe);
+      gameContainer.removeChild(pipePair.bottomPipe);
+      pipes.splice(index, 1);
+    }
+  });
+}
+
+// End Game
+function endGame() {
+  gameRunning = false;
+  alert("Game Over! Your score is: " + score);
+  location.reload(); // Reload the game
+}
+
+// Main Game Loop
+function gameLoop() {
+  if (gameRunning) {
+    updateCharacter();
+    updatePipes();
+
+    if (Math.floor(Math.random() * 100) < 2) {
+      generatePipes();
+    }
+
+    requestAnimationFrame(gameLoop);
+  }
+}
+
+gameLoop();
+Here's a simple version of an HTML, CSS, and JavaScript game similar to "Flappy Bird," where the player controls a character that navigates through gaps between pipes. This implementation uses basic HTML, CSS, and JavaScript with minimal styling and logic.
+
+HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian Battle Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="gameContainer">
+    <div id="character"></div>
+    <div id="score">Score: 0</div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+
+CSS (style.css)
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #87CEEB;
+}
+
+#gameContainer {
+  position: relative;
+  width: 400px;
+  height: 600px;
+  background-color: #b3e5fc;
+  overflow: hidden;
+  border: 2px solid #333;
+}
+
+#character {
+  position: absolute;
+  bottom: 50%;
+  left: 50px;
+  width: 30px;
+  height: 30px;
+  background-color: #ff4081;
+  border-radius: 50%;
+}
+
+.pipe {
+  position: absolute;
+  width: 50px;
+  background-color: #388e3c;
+}
+
+.topPipe {
+  top: 0;
+}
+
+.bottomPipe {
+  bottom: 0;
+}
+
+#score {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+  color: #333;
+  font-weight: bold;
+}
+
+JavaScript (script.js)
+
+const gameContainer = document.getElementById("gameContainer");
+const character = document.getElementById("character");
+const scoreDisplay = document.getElementById("score");
+
+let characterY = gameContainer.clientHeight / 2;
+let gravity = 2;
+let jump = -20;
+let velocity = 0;
+let pipes = [];
+let score = 0;
+let gameRunning = true;
+
+// Gravity & Flap
+document.addEventListener("keydown", () => {
+  if (gameRunning) velocity = jump;
+});
+
+// Update Character Position
+function updateCharacter() {
+  velocity += gravity;
+  characterY += velocity;
+  character.style.top = characterY + "px";
+
+  // Check for ground collision
+  if (characterY + character.clientHeight > gameContainer.clientHeight || characterY < 0) {
+    endGame();
+  }
+}
+
+// Generate Pipes
+function generatePipes() {
+  const gapHeight = 150;
+  const pipeWidth = 50;
+  const pipeX = gameContainer.clientWidth;
+  const topPipeHeight = Math.floor(Math.random() * (gameContainer.clientHeight - gapHeight));
+
+  const topPipe = document.createElement("div");
+  topPipe.classList.add("pipe", "topPipe");
+  topPipe.style.height = topPipeHeight + "px";
+  topPipe.style.left = pipeX + "px";
+  
+  const bottomPipe = document.createElement("div");
+  bottomPipe.classList.add("pipe", "bottomPipe");
+  bottomPipe.style.height = gameContainer.clientHeight - topPipeHeight - gapHeight + "px";
+  bottomPipe.style.left = pipeX + "px";
+
+  gameContainer.appendChild(topPipe);
+  gameContainer.appendChild(bottomPipe);
+
+  pipes.push({ topPipe, bottomPipe });
+}
+
+// Move Pipes & Check for Collisions
+function updatePipes() {
+  pipes.forEach((pipePair, index) => {
+    const pipeX = parseInt(pipePair.topPipe.style.left) - 2;
+    pipePair.topPipe.style.left = pipeX + "px";
+    pipePair.bottomPipe.style.left = pipeX + "px";
+
+    // Check for score
+    if (pipeX + pipePair.topPipe.clientWidth < character.offsetLeft && !pipePair.passed) {
+      score++;
+      scoreDisplay.innerText = "Score: " + score;
+      pipePair.passed = true;
+    }
+
+    // Check for collision
+    const charRect = character.getBoundingClientRect();
+    const topPipeRect = pipePair.topPipe.getBoundingClientRect();
+    const bottomPipeRect = pipePair.bottomPipe.getBoundingClientRect();
+
+    if (
+      (charRect.right > topPipeRect.left && charRect.left < topPipeRect.right && charRect.top < topPipeRect.bottom) ||
+      (charRect.right > bottomPipeRect.left && charRect.left < bottomPipeRect.right && charRect.bottom > bottomPipeRect.top)
+    ) {
+      endGame();
+    }
+
+    // Remove pipes that have moved off screen
+    if (pipeX + pipePair.topPipe.clientWidth < 0) {
+      gameContainer.removeChild(pipePair.topPipe);
+      gameContainer.removeChild(pipePair.bottomPipe);
+      pipes.splice(index, 1);
+    }
+  });
+}
+
+// End Game
+function endGame() {
+  gameRunning = false;
+  alert("Game Over! Your score is: " + score);
+  location.reload(); // Reload the game
+}
+
+// Main Game Loop
+function gameLoop() {
+  if (gameRunning) {
+    updateCharacter();
+    updatePipes();
+
+    if (Math.floor(Math.random() * 100) < 2) {
+      generatePipes();
+    }
+
+    requestAnimationFrame(gameLoop);
+  }
+}
+
+gameLoop();
+
+How the Game Works
+
+Character Movement: Gravity pulls the character down, and pressing a key makes it "flap" upward.
+
+Pipes: Randomly generated at the right, moving leftward to create obstacles with gaps.
+
+Collision Detection: The game checks if the character collides with a pipe or the ground.
+
+Score: Each successful pass through a pipe gap increases the score.
+
+
+How to Run
+
+To run this game,(index.html, style.css, and script.js)
+
