@@ -39,7 +39,7 @@ This script is designed to convert source code files into a Microsoft Word (.doc
 
 - Run the script using a Python interpreter:
 ```bash
-  python script_name.py
+  python main.py
 ```
 
 - Follow the prompts to enter the filepath of the folder containing the source code.
